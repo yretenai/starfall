@@ -8,10 +8,10 @@ quadrant Here
 ascension 19h 57m 20s
 declination 42.950°
 area 7.6187x10^9 km2
-seq 4
+seq 4, 3
 star 1 5
 bright_star 8 2
-""";
+"""
 
 	func testInit() {
 		do {
@@ -21,7 +21,9 @@ bright_star 8 2
 			XCTAssertEqual(constellation.ascension, "19h 57m 20s")
 			XCTAssertEqual(constellation.declination, "42.950°")
 			XCTAssertEqual(constellation.area, "7.6187x10^9 km2")
-			XCTAssertEqual(constellation.mainStars, 4)
+			XCTAssertEqual(constellation.groups.count, 2)
+			XCTAssertEqual(constellation.groups[0], 4)
+			XCTAssertEqual(constellation.groups[1], 3)
 			XCTAssertEqual(constellation.stars.count, 2)
 			XCTAssertEqual(constellation.stars[0].x, 1)
 			XCTAssertEqual(constellation.stars[0].y, 5)
@@ -30,9 +32,9 @@ bright_star 8 2
 			XCTAssertEqual(constellation.stars[1].y, 2)
 			XCTAssertTrue(constellation.stars[1].bright)
 		} catch ConstellationFileError.InvalidData(let hint) {
-			XCTFail(hint);
+			XCTFail(hint)
 		} catch {
-			XCTFail();
+			XCTFail()
 		}
 	}
 
@@ -43,9 +45,9 @@ bright_star 8 2
 				let value = try ConstellationFile(path: constellation)
 				XCTAssertFalse(value.stars.isEmpty)
 			} catch ConstellationFileError.InvalidData(let hint) {
-				XCTFail(constellation + " errored with " + hint);
+				XCTFail(constellation + " errored with " + hint)
 			} catch {
-				XCTFail(constellation + " errored");
+				XCTFail(constellation + " errored")
 			}
 		}
 	}

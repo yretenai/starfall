@@ -11,8 +11,8 @@ the following names are supported:
 
 - `name` (required): the name of the constellation
 - `quadrant`, `ascension`, `declination` and `area`: trivial text attributes
-- `seq` (legacy: `n_stars`): number of main/sub stars in the constellation (`seq main,sub`)
-- `star` and `bright_star`: a star position, minor stars will be a hollow icon (`star x y`, `bright_star x y`)
+- `seq` (legacy: `n_stars`): number of star groups in the constellation (`seq main,sub`)
+- `star` and `bright_star`: a star position, minor stars will be a hollow icon (`star x y`, `bright_star x y`) limited to 20x12
 
 any other keyword is ignored, any data after `#` is ignored
 

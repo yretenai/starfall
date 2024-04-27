@@ -5,25 +5,25 @@ enum Constellation {
 		do {
 			return try FileManager.default.contentsOfDirectory(atPath: path).filter({ NSString(string: $0).pathExtension == "constellation" })
 		} catch {
-			return [];
+			return []
 		}
 	}
 	
 	private static func get_constellations_bundled() -> [String] {
-		return Bundle.module.paths(forResourcesOfType: "constellation", inDirectory: nil);
+		return Bundle.module.paths(forResourcesOfType: "constellation", inDirectory: nil)
 	}
 
 	private static func get_constellations_system_xdg() -> [String] {
 		if let xdgDataDirs: String = ProcessInfo.processInfo.environment["XDG_DATA_DIRS"] {
-			var paths : [String] = [];
+			var paths : [String] = []
 			let dirs: [String.SubSequence] = xdgDataDirs.split(separator: ":", omittingEmptySubsequences: true)
 			for dir: String.SubSequence in dirs {
  				paths.append(contentsOf: get_constellations(path: NSString.path(withComponents: [String(dir), "starfall"])))
 			}
 
-			return paths;
+			return paths
 		} else {
-			return get_constellations(path: "/usr/share/starfall");
+			return get_constellations(path: "/usr/share/starfall")
 		}
 	}
 	
@@ -40,21 +40,21 @@ enum Constellation {
 			#endif
 		}
 
-		return [];
+		return []
 	}
 	
 	private static func get_constellations_macos() -> [String] {
-		var paths : [String] = [];
+		var paths : [String] = []
         if let user: String = ProcessInfo.processInfo.environment["USER"] {
 			paths.append(contentsOf: get_constellations(path: NSString.path(withComponents: ["/Users", user, "Library/Application Support/aq.chronovore.Starfall"])))
 		}
 		
         paths.append(contentsOf: get_constellations(path: NSString.path(withComponents: ["/Library/Application Support/aq.chronovore.Starfall"])))
-        return paths;
+        return paths
 	}
 	
 	private static func get_constellations_windows() -> [String] {
-		var paths : [String] = [];
+		var paths : [String] = []
 		if let appdata: String = ProcessInfo.processInfo.environment["APPDATA"] {
 			paths.append(contentsOf: get_constellations(path: NSString.path(withComponents: [appdata, "aq.chronovore.starfall"])))
 		} 
@@ -67,11 +67,11 @@ enum Constellation {
 			paths.append(contentsOf: get_constellations(path: NSString.path(withComponents: [programData, "aq.chronovore.starfall"])))
 		}
         
-        return paths;
+        return paths
 	}
 
 	static func get_constellations(additionalPaths: String?...) -> Set<String> {
-		var paths : [String] = [];
+		var paths : [String] = []
 		for dir: String? in additionalPaths {
 			if dir == nil {
 				continue
@@ -80,19 +80,19 @@ enum Constellation {
 			paths.append(contentsOf: get_constellations(path: dir!))
 		}
 		
-		paths.append(contentsOf: get_constellations_bundled());
+		paths.append(contentsOf: get_constellations_bundled())
 
 		#if !os(Windows)
-			paths.append(contentsOf: get_constellations_system_xdg());
-			paths.append(contentsOf: get_constellations_user_xdg());
+			paths.append(contentsOf: get_constellations_system_xdg())
+			paths.append(contentsOf: get_constellations_user_xdg())
 		#endif
 
 		#if os(macOS)
-			paths.append(contentsOf: get_constellations_macos());
+			paths.append(contentsOf: get_constellations_macos())
 		#endif
 
 		#if os(Windows) || os(Cygwin)
-			paths.append(contentsOf: get_constellations_windows());
+			paths.append(contentsOf: get_constellations_windows())
 		#endif
 
 		return Set(paths)
