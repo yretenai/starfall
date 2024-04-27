@@ -45,12 +45,12 @@ enum Constellation {
 	
 	private static func get_constellations_macos() -> [String] {
 		var paths : [String] = []
-        if let user: String = ProcessInfo.processInfo.environment["USER"] {
+		if let user: String = ProcessInfo.processInfo.environment["USER"] {
 			paths.append(contentsOf: get_constellations(path: NSString.path(withComponents: ["/Users", user, "Library/Application Support/aq.chronovore.Starfall"])))
 		}
 		
-        paths.append(contentsOf: get_constellations(path: NSString.path(withComponents: ["/Library/Application Support/aq.chronovore.Starfall"])))
-        return paths
+		paths.append(contentsOf: get_constellations(path: NSString.path(withComponents: ["/Library/Application Support/aq.chronovore.Starfall"])))
+		return paths
 	}
 	
 	private static func get_constellations_windows() -> [String] {
@@ -66,8 +66,8 @@ enum Constellation {
 		if let programData: String = ProcessInfo.processInfo.environment["PROGRAMDATA"] {
 			paths.append(contentsOf: get_constellations(path: NSString.path(withComponents: [programData, "aq.chronovore.starfall"])))
 		}
-        
-        return paths
+		
+		return paths
 	}
 
 	static func get_constellations(additionalPaths: String?...) -> Set<String> {
