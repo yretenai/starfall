@@ -1,0 +1,28 @@
+{
+	"configurations": [
+		{
+			"type": "lldb",
+			"request": "launch",
+			"sourceLanguages": [
+				"swift"
+			],
+			"args": [],
+			"cwd": "${workspaceFolder:starfall}",
+			"name": "Debug starfall",
+			"program": "${workspaceFolder:starfall}/.build/debug/starfall",
+			"preLaunchTask": "swift: Build Debug starfall"
+		},
+		{
+			"type": "lldb",
+			"request": "launch",
+			"sourceLanguages": [
+				"swift"
+			],
+			"args": [],
+			"cwd": "${workspaceFolder:starfall}",
+			"name": "Release starfall",
+			"program": "${workspaceFolder:starfall}/.build/release/starfall",
+			"preLaunchTask": "swift: Build Release starfall"
+		}
+	]
+}
