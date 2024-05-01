@@ -19,6 +19,12 @@ struct Starfall: ParsableCommand {
 	var color: String = "ffffff"
 	@Option(name: .shortAndLong, help: "Label format for attributes", completion: .list(["normal", "symbol", "short"]))
 	var labelFormat: LabelFormat = .normal
+	@Option(name: .shortAndLong, help: "Left padding for the constellation box")
+	var outerPadding: Int = 0
+	@Option(name: .shortAndLong, help: "Left padding for the attributes list")
+	var innerPadding: Int = 4
+	@Flag(name: .shortAndLong, help: "Draw the border for the constellation box")
+	var border: Bool = false
 	@Option(name: .shortAndLong, help: "Text transformation for window headings", completion: .list(["normal", "uppercase", "lowercase"]))
 	var textTransform: TextTransform = .lowercase
 	@Flag(name: .long, help: "Debug print all constellations")
@@ -104,20 +110,30 @@ struct Starfall: ParsableCommand {
 		let pre = nameParts[0].fullwidth()
 		let preRemain = (Starfall.WindowWidth / 2) - pre.count
 
+		let borderTL = !border ? "┌" : " "
+		let borderBL = !border ? "└" : " "
+		let borderTR = !border ? "┐" : " "
+		let borderBR = !border ? "┘" : " "
+		let borderTB = !border ? "─" : " "
+		let borderLR = !border ? "│" : " "
+
+		let boxPadding = String(repeating: " ", count: outerPadding)
+		let attributePadding = String(repeating: " ", count: innerPadding)
+
 		if preRemain > 0 {
-			lines.append("┌" + String(repeating: "─", count: preRemain) + Starfall.boldString + colorString + pre + Starfall.resetString + String(repeating: "─", count: preRemain) + "┐")
+			lines.append(boxPadding + borderTL + String(repeating: borderTB, count: preRemain) + Starfall.boldString + colorString + pre + Starfall.resetString + String(repeating: borderTB, count: preRemain) + borderTR)
 		} else {
-			lines.append("┌" + pre + "┐")
+			lines.append(boxPadding + borderTL + pre + borderTR)
 		}
 
 		for _ in 0..<Starfall.WindowHeight {
-			lines.append("│" + String(repeating: " ", count: Starfall.WindowWidth) + "│")
+			lines.append(boxPadding + borderLR + String(repeating: " ", count: Starfall.WindowWidth) + borderLR)
 		}
 		
 		// add stars
 		for star in constellation.stars {
 			var line = Array(lines[star.y + 1])
-			line[star.x + 1] = star.bright ? Starfall.bright_star : Starfall.star
+			line[outerPadding + star.x + 1] = star.bright ? Starfall.bright_star : Starfall.star
 			lines[star.y + 1] = String(line)
 		}
 		
@@ -131,15 +147,15 @@ struct Starfall: ParsableCommand {
 			let postRemain = (Starfall.WindowWidth / 2) - post.count
 
 			if postRemain > 0 {
-				lines.append("└" + String(repeating: "─", count: postRemain) + Starfall.boldString + colorString + post + Starfall.resetString + String(repeating: "─", count: postRemain) + "┘")
+				lines.append(boxPadding + borderBL + String(repeating: borderTB, count: postRemain) + Starfall.boldString + colorString + post + Starfall.resetString + String(repeating: borderTB, count: postRemain) + borderBR)
 			} else {
-				lines.append("└" + post + "┘")
+				lines.append(boxPadding + borderBL + post + borderBR)
 			}
 		} else {
-			lines.append("└" + String(repeating: "─", count: Starfall.WindowWidth) + "┘")
+			lines.append(boxPadding + borderBL + String(repeating: borderTB, count: Starfall.WindowWidth) + borderBR)
 		}
 
-		let prefix = "\t" + Starfall.boldString + colorString
+		let prefix = attributePadding + Starfall.boldString + colorString
 		let separator = (labelFormat == .symbol ? "" : ":") + " " + Starfall.resetString
 
 		lines[2] += prefix + constellation.name + Starfall.resetString
