@@ -23,8 +23,10 @@ struct Starfall: ParsableCommand {
 	var outerPadding: Int = 0
 	@Option(name: .shortAndLong, help: "Left padding for the attributes list")
 	var innerPadding: Int = 4
-	@Flag(name: .shortAndLong, help: "Draw the border for the constellation box")
+	@Flag(name: .shortAndLong, help: "Do not draw the border for the constellation box")
 	var border: Bool = false
+	@Flag(name: .long, help: "Do not draw the title for the constellation box")
+	var title: Bool = false
 	@Option(name: .shortAndLong, help: "Text transformation for window headings", completion: .list(["normal", "uppercase", "lowercase"]))
 	var textTransform: TextTransform = .lowercase
 	@Flag(name: .long, help: "Debug print all constellations")
@@ -120,10 +122,14 @@ struct Starfall: ParsableCommand {
 		let boxPadding = String(repeating: " ", count: outerPadding)
 		let attributePadding = String(repeating: " ", count: innerPadding)
 
-		if preRemain > 0 {
-			lines.append(boxPadding + borderTL + String(repeating: borderTB, count: preRemain) + Starfall.boldString + colorString + pre + Starfall.resetString + String(repeating: borderTB, count: preRemain) + borderTR)
+		if !title {
+			if preRemain > 0 {
+				lines.append(boxPadding + borderTL + String(repeating: borderTB, count: preRemain) + Starfall.boldString + colorString + pre + Starfall.resetString + String(repeating: borderTB, count: preRemain) + borderTR)
+			} else {
+				lines.append(boxPadding + borderTL + pre + borderTR)
+			}
 		} else {
-			lines.append(boxPadding + borderTL + pre + borderTR)
+			lines.append(boxPadding + borderTL + String(repeating: borderTB, count: Starfall.WindowWidth) + borderTR)
 		}
 
 		for _ in 0..<Starfall.WindowHeight {
@@ -142,7 +148,7 @@ struct Starfall: ParsableCommand {
 		}
 
 		// preprocess last part, if necessary
-		if nameParts.count > 1 {
+		if nameParts.count > 1 && !title {
 			let post = nameParts[1].fullwidth()
 			let postRemain = (Starfall.WindowWidth / 2) - post.count
 
