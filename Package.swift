@@ -1,13 +1,15 @@
-// swift-tools-version: 5.10
+// swift-tools-version: 6.0
 
 import PackageDescription
 
 let package = Package(
 	name: "Starfall",
-	products: [],
+	products: [
+		.executable(name: "starfall", targets: ["starfall"])
+	],
 	dependencies: [
-		.package(url: "https://github.com/apple/swift-argument-parser.git", from: "1.3.0"),
-		.package(url: "https://github.com/apple/swift-docc-plugin", from: "1.0.0"),
+		.package(url: "https://github.com/apple/swift-argument-parser", from: "1.5.0"),
+		.package(url: "https://github.com/swiftlang/swift-docc-plugin", from: "1.4.3"),
 	],
 	targets: [
 		.executableTarget(

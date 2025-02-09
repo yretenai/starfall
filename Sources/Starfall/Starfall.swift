@@ -56,6 +56,7 @@ struct Starfall: ParsableCommand {
 
 		if debugConstellations {
 			for constellation in constellations {
+				print(constellation)
 				render(path: constellation)
 			}
 		} else {
